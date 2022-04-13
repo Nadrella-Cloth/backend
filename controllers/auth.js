@@ -7,9 +7,6 @@ const fs = require("fs");
 
 const payload = {};
 
-const privateKey = fs.readFileSync("private.key", "utf-8");
-const publicKey = fs.readFileSync("public.key", "utf-8");
-
 const jwt = require("jsonwebtoken");
 
 exports.login = (req, res) => {
@@ -38,7 +35,7 @@ exports.login = (req, res) => {
         expiresIn: "12h",
         algorithm: "RS256",
       };
-      const token = jwt.sign(payload, privateKey, signOptions);
+      const token = jwt.sign(payload, process.env.secret, signOptions);
 
       return res.json({ user, token });
     });
@@ -63,7 +60,7 @@ exports.signup = (req, res) => {
         expiresIn: "12h",
         algorithm: "RS256",
       };
-      const token = jwt.sign(payload, privateKey, signOptions);
+      const token = jwt.sign(payload, process.env.secret, signOptions);
 
       const newUser = new User({
         username,
@@ -108,7 +105,7 @@ exports.verifiedAccount = (req, res) => {
 
       jwt.verify(
         user.verified.token,
-        publicKey,
+        process.env.secret,
         verifyOptions,
         (err, decoded) => {
           if (err) return res.status(400).json({ message: err });
@@ -150,7 +147,7 @@ exports.getNewVerificationToken = (req, res) => {
 
       jwt.verify(
         user.verified.token,
-        publicKey,
+        process.env.secret,
         verifyOptions,
         (err, decoded) => {
           if (err) {
@@ -161,7 +158,7 @@ exports.getNewVerificationToken = (req, res) => {
               expiresIn: "12h",
               algorithm: "RS256",
             };
-            const token = jwt.sign(payload, privateKey, signOptions);
+            const token = jwt.sign(payload, process.env.secret, signOptions);
 
             user.verified.token = token;
 
