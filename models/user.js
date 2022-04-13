@@ -14,21 +14,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    bio: {
-      type: String,
-    },
     avatar: {
       type: String,
     },
-    verified: {
-      status: {
-        type: Boolean,
-        default: false,
-      },
-      token: {
-        type: String,
-      },
+    telephone: {
+      type: String,
     },
+    address:{
+      type: String,
+    }
   },
   { timestamps: true }
 );
