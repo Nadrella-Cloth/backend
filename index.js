@@ -1,29 +1,32 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const socketio = require("./socketio");
-require("dotenv").config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const socketio = require('./socketio');
+require('dotenv').config();
 
 const app = express();
 
 mongoose.connect(
   process.env.MONGODB_ATLAS,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  {useNewUrlParser: true, useUnifiedTopology: true},
   (err) => {
     if (err) return console.log(`Error while connecting to mongodb: ${err}`);
 
-    return console.log("Connected to mongodb");
+    return console.log('Connected to mongodb');
   }
 );
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-const authRoute = require("./routes/auth");
+const authRoute = require('./routes/auth');
+const productRoute = require('./routes/product');
+const cartRoute = require('./routes/cart');
+const orderRoute = require('./routes/order');
 
-app.use("/api", authRoute);
+app.use('/api', authRoute, productRoute, cartRoute, orderRoute);
 
 const server = app.listen(process.env.PORT || 8080, (err) => {
   if (err) return console.log(`Error while starting server : ${err}`);
